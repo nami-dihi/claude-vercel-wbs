@@ -30,7 +30,7 @@ feat: [Phase 범위] [내용 요약]
 
 closes #<이슈번호>
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+🤖 Generated with Gemini
 ```
 
 ## 작성 규칙

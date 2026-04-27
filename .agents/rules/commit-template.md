@@ -10,7 +10,7 @@ trigger: always_on
 - <변경 내용 1>
 - <변경 내용 2>
 
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+Co-Authored-By: Gemini <noreply@google.com>
 ```
 
 ## 작성 규칙
@@ -28,5 +28,5 @@ feat: #12 Task 생성 모달 구현
 - 빈 제목 제출 방지를 위해 클라이언트 유효성 검사 추가
 - 저장 후 목록 자동 갱신 (SWR mutate)
 
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+Co-Authored-By: Gemini <noreply@google.com>
 ```
