@@ -11,6 +11,12 @@ interface GanttViewProps {
   onToggle: (id: string) => void
 }
 
+function isOverdue(task: Task) {
+  if (!task.dueDate || task.status === 'done') return false
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Seoul' }) // 'YYYY-MM-DD'
+  return task.dueDate < today
+}
+
 export default function GanttView({ rows, collapsed, onToggle }: GanttViewProps) {
   // Helper date functions
   const addDays = (date: Date, days: number) => {
@@ -203,12 +209,13 @@ export default function GanttView({ rows, collapsed, onToggle }: GanttViewProps)
             {/* Task Bars */}
             {rows.map(({ task }, i) => {
               const isLast = i === rows.length - 1
-              
+
               const hasStart = task.startDate && isValid(new Date(task.startDate))
               const hasDue = task.dueDate && isValid(new Date(task.dueDate))
-              
+
               const startDate = hasStart ? new Date(task.startDate!) : null
               const dueDate = hasDue ? new Date(task.dueDate!) : null
+              const overdue = isOverdue(task)
 
               let barContent = null
 
@@ -221,7 +228,7 @@ export default function GanttView({ rows, collapsed, onToggle }: GanttViewProps)
               } else {
                 const leftP = getLeftPercent(startDate)
                 const widthP = getWidthPercent(startDate, dueDate)
-                
+
                 barContent = (
                   <Box
                     position="absolute"
@@ -231,13 +238,24 @@ export default function GanttView({ rows, collapsed, onToggle }: GanttViewProps)
                     bg="#2e2e2e"
                     borderRadius="4px"
                     overflow="hidden"
+                    border={overdue ? '2px solid #f87171' : 'none'}
                   >
                     <Box
                       h="100%"
                       w={`${task.progress}%`}
-                      bg="#3ecf8e"
+                      bg={overdue ? '#f87171' : '#3ecf8e'}
                       opacity={0.8}
                     />
+                    {overdue && (
+                      <Box
+                        position="absolute"
+                        inset={0}
+                        pointerEvents="none"
+                        style={{
+                          background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(248,113,113,0.15) 4px, rgba(248,113,113,0.15) 8px)',
+                        }}
+                      />
+                    )}
                   </Box>
                 )
               }
