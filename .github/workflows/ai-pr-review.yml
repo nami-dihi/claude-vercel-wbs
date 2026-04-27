@@ -29,14 +29,8 @@ jobs:
         with:
           gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
           github_pr_number: '${{ github.event.pull_request.number }}'
-          gemini_model: 'gemini-3.1-flash'
-          prompt: |
-            GitHub MCP를 사용해 PR #${{ github.event.pull_request.number }}의 변경 내용을 가져와서 한국어로 코드 리뷰를 작성해줘.
-            리뷰 작성 기준:
-            - 버그 가능성, 보안 문제, 성능 이슈가 있으면 반드시 언급
-            - 개선할 코드가 있다면 수정 예시를 코드 블록으로 보여줘
-            - 잘 작성된 부분도 간단히 언급해줘
-            리뷰가 완성되면 pull_request_review_write 도구로 PR에 코멘트를 달아줘.
+          gemini_model: 'gemini-2.5-flash'
+          prompt: 'GitHub MCP를 사용해 PR #${{ github.event.pull_request.number }}의 변경 내용을 가져와서 한국어로 코드 리뷰를 작성해줘. 버그 가능성, 보안 문제, 성능 이슈가 있으면 반드시 언급하고, 개선할 코드가 있다면 수정 예시를 코드 블록으로 보여줘. 리뷰가 완성되면 pull_request_review_write 도구로 PR에 코멘트를 달아줘.'
           settings: |-
             {
               "mcpServers": {
