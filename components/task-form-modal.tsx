@@ -135,9 +135,16 @@ export default function TaskFormModal({ isOpen, task, parentId, onClose, onSubmi
               onChange={(e) => set('status', e.target.value)}
               style={{
                 width: '100%', height: '40px',
-                background: '#0f0f0f', color: '#fafafa',
+                backgroundColor: '#0f0f0f',
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23898989" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>')`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 12px center',
+                backgroundSize: '16px',
+                color: '#fafafa',
                 border: '1px solid #363636', borderRadius: '6px',
-                padding: '0 12px', fontSize: '14px',
+                padding: '0 36px 0 12px', fontSize: '14px',
+                appearance: 'none',
+                WebkitAppearance: 'none',
               }}
             >
               <option value="todo">할 일</option>
