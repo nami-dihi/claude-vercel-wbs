@@ -106,14 +106,14 @@
 
 ---
 
-## Phase 6 — CSV Import/Export
+## Phase 6 — CSV Import/Export ✅
 
 **커밋 목표:** `feat: #6 CSV Import/Export`
 
-- [ ] `components/csv-export-button.tsx` — `wbs-YYYY-MM-DD.csv` 다운로드
-- [ ] `components/csv-import-button.tsx` — 파일 선택 → 미리보기 → 적용
-- [ ] `app/api/tasks/import/route.ts` — 배치 insert
-- [ ] J10(Export), J11(Import 성공), J12(Import 부분 오류) 시나리오 검증
+- [x] `components/csv-export-button.tsx` — `wbs-YYYY-MM-DD.csv` 다운로드
+- [x] `components/csv-import-button.tsx` — 파일 선택 → 미리보기 → 적용
+- [x] `app/api/tasks/import/route.ts` — 배치 insert
+- [x] J10(Export), J11(Import 성공), J12(Import 부분 오류) 시나리오 검증
 
 ---
 
