@@ -148,12 +148,12 @@
 
 ## Phase 9 — Supabase Cloud + GitHub Actions CI
 
-- [ ] Supabase Cloud 프로젝트 생성 (리전: Northeast Asia Seoul)
-- [ ] Direct URL (port 5432) 수집 → `PRODUCTION_DATABASE_URL`
-- [ ] Transaction Pooler URL (port 6543) 수집 → Vercel용 `DATABASE_URL`
-- [ ] GitHub Settings → Environments → `production` 생성 + secret 등록
-- [ ] `develop` → `main` 병합 후 push
-- [ ] `gh run watch` → `db-migrate` 워크플로우 ✅ 확인
+- [x] Supabase Cloud 프로젝트 생성 (리전: Northeast Asia Seoul)
+- [x] Direct URL (port 5432) 수집 → `PRODUCTION_DATABASE_URL`
+- [x] Transaction Pooler URL (port 6543) 수집 → Vercel용 `DATABASE_URL`
+- [x] GitHub Settings → Environments → `production` 생성 + secret 등록
+- [x] `develop` → `main` 병합 후 push
+- [x] `gh run watch` → `db-migrate` 워크플로우 ✅ 확인
 - [ ] Supabase Studio Table Editor에서 tasks 테이블 확인
 
 ---
