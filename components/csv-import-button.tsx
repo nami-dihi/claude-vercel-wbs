@@ -173,19 +173,11 @@ export default function CsvImportButton({ tasks, onImported }: Props) {
     if (!preview) return
     setApplying(true)
 
-    // CSV 내 순서대로 삽입하며 parentId를 동적으로 해결
+    // 순차 삽입 — 삽입 직후 titleToId를 갱신해 같은 배치 내 자식이 신규 부모를 우선 참조하도록 함
     const titleToId: Record<string, string> = Object.fromEntries(tasks.map(t => [t.title, t.id]))
-    const toInsert = preview.rows.map(r => {
-      let parentId = r.parentId
-      if (!parentId && r.parentTitle && titleToId[r.parentTitle]) {
-        parentId = titleToId[r.parentTitle]
-      }
-      return { ...r, parentId }
-    })
 
-    // 순차 삽입 (CSV 내 부모가 먼저 등장한다는 전제)
-    for (const row of toInsert) {
-      const parentId = row.parentId ?? (row.parentTitle ? titleToId[row.parentTitle] ?? null : null)
+    for (const row of preview.rows) {
+      const parentId = row.parentTitle ? (titleToId[row.parentTitle] ?? null) : null
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -202,7 +194,7 @@ export default function CsvImportButton({ tasks, onImported }: Props) {
       })
       if (res.ok) {
         const created = await res.json()
-        titleToId[row.title] = created.id
+        titleToId[row.title] = created.id  // 이후 행이 이 Task를 부모로 참조 가능
       }
     }
 
@@ -241,8 +233,7 @@ export default function CsvImportButton({ tasks, onImported }: Props) {
 
             <Box bg="rgba(62,207,142,0.08)" border="1px solid rgba(62,207,142,0.25)" borderRadius="8px" p={3} mb={4}>
               <Text fontSize="14px" color="#3ecf8e">
-                {preview.rows.length}개 작업을 추가합니다.
-                {preview.excluded.length > 0 && ` 제외 ${preview.excluded.length}건.`}
+                {preview.rows.length}개 작업을 추가합니다. 제외 {preview.excluded.length}건.
               </Text>
             </Box>
 
