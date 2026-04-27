@@ -23,7 +23,7 @@ jobs:
       - name: Run Gemini CLI for PR Review
         uses: google-github-actions/run-gemini-cli@v0
         env:
-          GEMINI_TRUST_WORKSPACE: 'true'
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
         with:
