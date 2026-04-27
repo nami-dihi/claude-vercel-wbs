@@ -6,6 +6,8 @@ import type { Task } from '@/lib/db/schema'
 import TaskRow from './task-row'
 import TaskFormModal from './task-form-modal'
 import TaskDeleteDialog from './task-delete-dialog'
+import CsvExportButton from './csv-export-button'
+import CsvImportButton from './csv-import-button'
 
 type TreeNode = Task & { children: TreeNode[] }
 
@@ -128,20 +130,24 @@ export default function TaskList() {
               {tasks.length}개의 Task
             </Text>
           </Box>
-          <Button
-            onClick={() => { setNewParentId(null); setIsCreateOpen(true) }}
-            bg="#0f0f0f"
-            color="#fafafa"
-            border="1px solid #fafafa"
-            borderRadius="9999px"
-            px={6}
-            h="36px"
-            fontSize="14px"
-            fontWeight={500}
-            _hover={{ opacity: 0.8 }}
-          >
-            + Task 추가
-          </Button>
+          <Flex gap={2} align="center">
+            <CsvImportButton tasks={tasks} onImported={fetchTasks} />
+            <CsvExportButton tasks={tasks} />
+            <Button
+              onClick={() => { setNewParentId(null); setIsCreateOpen(true) }}
+              bg="#0f0f0f"
+              color="#fafafa"
+              border="1px solid #fafafa"
+              borderRadius="9999px"
+              px={6}
+              h="36px"
+              fontSize="14px"
+              fontWeight={500}
+              _hover={{ opacity: 0.8 }}
+            >
+              + Task 추가
+            </Button>
+          </Flex>
         </Flex>
 
         {/* 컬럼 헤더 */}
