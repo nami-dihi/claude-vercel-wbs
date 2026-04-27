@@ -21,7 +21,8 @@ interface Props {
 
 function isOverdue(task: Task) {
   if (!task.dueDate || task.status === 'done') return false
-  return new Date(task.dueDate) < new Date(new Date().toDateString())
+  const today = new Date().toLocaleDateString('en-CA') // 'YYYY-MM-DD'
+  return task.dueDate < today
 }
 
 export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isFirst, isLast, onToggle, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
