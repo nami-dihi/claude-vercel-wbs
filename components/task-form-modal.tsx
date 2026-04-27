@@ -189,7 +189,7 @@ export default function TaskFormModal({ isOpen, task, parentId, onClose, onSubmi
             onClick={onClose}
             bg="transparent"
             color="#898989"
-            border="1px solid #363636"
+            border="1px solid transparent"
             borderRadius="6px"
             px={5}
             fontSize="14px"
