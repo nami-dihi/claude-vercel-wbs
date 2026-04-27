@@ -40,10 +40,9 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
         px={4}
         py={3}
         gap={3}
-        pl={`${16 + depth * 24}px`}
       >
         {/* 접기/펼치기 토글 */}
-        <Box w="16px" flexShrink={0} display="flex" alignItems="center" justifyContent="center">
+        <Box w="16px" flexShrink={0} display="flex" alignItems="center" justifyContent="center" ml={`${depth * 24}px`}>
           {hasChildren ? (
             <Box
               as="button"
@@ -100,7 +99,7 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
         </Flex>
 
         {/* 상태 */}
-        <Box flexShrink={0}>
+        <Box w="72px" flexShrink={0}>
           <StatusBadge status={task.status as 'todo' | 'doing' | 'done'} onClick={onStatusCycle} />
         </Box>
 
@@ -121,7 +120,7 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
         </Box>
 
         {/* 메뉴 */}
-        <Box flexShrink={0}>
+        <Box w="28px" flexShrink={0} display="flex" justifyContent="flex-end">
           <TaskMenu onEdit={onEdit} onDelete={onDelete} onAddSubtask={onAddSubtask} />
         </Box>
       </Flex>

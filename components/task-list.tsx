@@ -145,15 +145,17 @@ export default function TaskList() {
             px={4}
             pb={2}
             mb={1}
+            gap={3}
             fontSize="12px"
             color="#4d4d4d"
             fontWeight={500}
             borderBottom="1px solid #242424"
             style={{ letterSpacing: '0.05em', textTransform: 'uppercase' }}
           >
+            <Box w="16px" flexShrink={0} />
             <Box flex={1}>제목</Box>
             <Box w="80px" flexShrink={0}>진행률</Box>
-            <Box w="72px" flexShrink={0} ml={3}>상태</Box>
+            <Box w="72px" flexShrink={0}>상태</Box>
             <Box w="100px" flexShrink={0} display={{ base: 'none', md: 'block' }}>목표 기한</Box>
             <Box w="28px" flexShrink={0} />
           </Flex>
