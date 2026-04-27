@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Box, Flex, Text, Button, Heading } from '@chakra-ui/react'
+import { Box, Flex, Text, Button, Heading, Tabs } from '@chakra-ui/react'
 import type { Task } from '@/lib/db/schema'
 import TaskRow from './task-row'
 import TaskFormModal from './task-form-modal'
 import TaskDeleteDialog from './task-delete-dialog'
+import CsvExportButton from './csv-export-button'
+import CsvImportButton from './csv-import-button'
+import GanttView from './gantt-view'
 
 type TreeNode = Task & { children: TreeNode[] }
 
@@ -128,78 +131,135 @@ export default function TaskList() {
               {tasks.length}개의 Task
             </Text>
           </Box>
-          <Button
-            onClick={() => { setNewParentId(null); setIsCreateOpen(true) }}
-            bg="#0f0f0f"
-            color="#fafafa"
-            border="1px solid #fafafa"
-            borderRadius="9999px"
-            px={6}
-            h="36px"
-            fontSize="14px"
-            fontWeight={500}
-            _hover={{ opacity: 0.8 }}
-          >
-            + Task 추가
-          </Button>
+          <Flex gap={2} align="center">
+            <CsvImportButton tasks={tasks} onImported={fetchTasks} />
+            <CsvExportButton tasks={tasks} />
+            <Button
+              onClick={() => { setNewParentId(null); setIsCreateOpen(true) }}
+              bg="#0f0f0f"
+              color="#fafafa"
+              border="1px solid #fafafa"
+              borderRadius="9999px"
+              px={6}
+              h="36px"
+              fontSize="14px"
+              fontWeight={500}
+              _hover={{ opacity: 0.8 }}
+            >
+              + Task 추가
+            </Button>
+          </Flex>
         </Flex>
 
-        {/* 컬럼 헤더 */}
-        {tasks.length > 0 && (
-          <Flex
-            px={4}
-            pb={2}
-            mb={1}
-            gap={3}
-            fontSize="12px"
-            color="#4d4d4d"
-            fontWeight={500}
-            borderBottom="1px solid #242424"
-            style={{ letterSpacing: '0.05em', textTransform: 'uppercase' }}
-          >
-            <Box w="16px" flexShrink={0} />
-            <Box flex={1}>제목</Box>
-            <Box w="80px" flexShrink={0}>진행률</Box>
-            <Box w="72px" flexShrink={0}>상태</Box>
-            <Box w="100px" flexShrink={0} display={{ base: 'none', md: 'block' }}>목표 기한</Box>
-            <Box w="28px" flexShrink={0} />
-          </Flex>
-        )}
+        <Tabs.Root defaultValue="list" variant="enclosed">
+          <Tabs.List bg="#0f0f0f" borderRadius="9999px" p={1} border="1px solid #2e2e2e" display="inline-flex" mb={6}>
+            <Tabs.Trigger
+              value="list"
+              borderRadius="9999px"
+              px={6}
+              py={2}
+              fontSize="14px"
+              fontWeight={500}
+              color="#898989"
+              _selected={{ bg: '#2e2e2e', color: '#fafafa' }}
+              cursor="pointer"
+            >
+              목록 뷰
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              value="gantt"
+              borderRadius="9999px"
+              px={6}
+              py={2}
+              fontSize="14px"
+              fontWeight={500}
+              color="#898989"
+              _selected={{ bg: '#2e2e2e', color: '#fafafa' }}
+              cursor="pointer"
+            >
+              간트 뷰
+            </Tabs.Trigger>
+          </Tabs.List>
 
-        {/* Task 목록 */}
-        {loading ? (
-          <Box textAlign="center" py={16}>
-            <Text color="#898989" fontSize="14px">로딩 중...</Text>
-          </Box>
-        ) : tasks.length === 0 ? (
-          <Box
-            border="1px solid #2e2e2e"
-            borderRadius="8px"
-            py={16}
-            textAlign="center"
-          >
-            <Text color="#898989" fontSize="14px" mb={2}>아직 Task가 없습니다.</Text>
-            <Text color="#4d4d4d" fontSize="13px">상단의 &ldquo;+ Task 추가&rdquo; 버튼으로 첫 Task를 만들어 보세요.</Text>
-          </Box>
-        ) : (
-          <Box border="1px solid #2e2e2e" borderRadius="8px">
-            {rows.map(({ task, depth, hasChildren }, i) => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                depth={depth}
-                hasChildren={hasChildren}
-                isCollapsed={collapsed.has(task.id)}
-                isLast={i === rows.length - 1}
-                onToggle={() => toggleCollapse(task.id)}
-                onEdit={() => setEditingTask(task)}
-                onDelete={() => setDeletingTask(task)}
-                onStatusCycle={() => handleStatusCycle(task)}
-                onAddSubtask={() => openAddSubtask(task.id)}
-              />
-            ))}
-          </Box>
-        )}
+          <Tabs.Content value="list">
+            {/* 컬럼 헤더 */}
+            {tasks.length > 0 && (
+              <Flex
+                px={4}
+                pb={2}
+                mb={1}
+                gap={3}
+                fontSize="12px"
+                color="#4d4d4d"
+                fontWeight={500}
+                borderBottom="1px solid #242424"
+                style={{ letterSpacing: '0.05em', textTransform: 'uppercase' }}
+              >
+                <Box w="16px" flexShrink={0} />
+                <Box flex={1}>제목</Box>
+                <Box w="80px" flexShrink={0}>진행률</Box>
+                <Box w="72px" flexShrink={0}>상태</Box>
+                <Box w="100px" flexShrink={0} display={{ base: 'none', md: 'block' }}>목표 기한</Box>
+                <Box w="28px" flexShrink={0} />
+              </Flex>
+            )}
+
+            {/* Task 목록 */}
+            {loading ? (
+              <Box textAlign="center" py={16}>
+                <Text color="#898989" fontSize="14px">로딩 중...</Text>
+              </Box>
+            ) : tasks.length === 0 ? (
+              <Box
+                border="1px solid #2e2e2e"
+                borderRadius="8px"
+                py={16}
+                textAlign="center"
+              >
+                <Text color="#898989" fontSize="14px" mb={2}>아직 Task가 없습니다.</Text>
+                <Text color="#4d4d4d" fontSize="13px">상단의 &ldquo;+ Task 추가&rdquo; 버튼으로 첫 Task를 만들어 보세요.</Text>
+              </Box>
+            ) : (
+              <Box border="1px solid #2e2e2e" borderRadius="8px">
+                {rows.map(({ task, depth, hasChildren }, i) => (
+                  <TaskRow
+                    key={task.id}
+                    task={task}
+                    depth={depth}
+                    hasChildren={hasChildren}
+                    isCollapsed={collapsed.has(task.id)}
+                    isLast={i === rows.length - 1}
+                    onToggle={() => toggleCollapse(task.id)}
+                    onEdit={() => setEditingTask(task)}
+                    onDelete={() => setDeletingTask(task)}
+                    onStatusCycle={() => handleStatusCycle(task)}
+                    onAddSubtask={() => openAddSubtask(task.id)}
+                  />
+                ))}
+              </Box>
+            )}
+          </Tabs.Content>
+
+          <Tabs.Content value="gantt">
+            {loading ? (
+              <Box textAlign="center" py={16}>
+                <Text color="#898989" fontSize="14px">로딩 중...</Text>
+              </Box>
+            ) : tasks.length === 0 ? (
+              <Box
+                border="1px solid #2e2e2e"
+                borderRadius="8px"
+                py={16}
+                textAlign="center"
+              >
+                <Text color="#898989" fontSize="14px" mb={2}>아직 Task가 없습니다.</Text>
+                <Text color="#4d4d4d" fontSize="13px">상단의 &ldquo;+ Task 추가&rdquo; 버튼으로 첫 Task를 만들어 보세요.</Text>
+              </Box>
+            ) : (
+              <GanttView rows={rows} collapsed={collapsed} onToggle={toggleCollapse} />
+            )}
+          </Tabs.Content>
+        </Tabs.Root>
       </Box>
 
       <TaskFormModal

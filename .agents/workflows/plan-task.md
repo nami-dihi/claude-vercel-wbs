@@ -1,0 +1,115 @@
+---
+description: 다음 작업 이슈를 선정하고 구현 계획을 수립한다. origin 저장소의 현황을 파악하고, PLAN.md 순서에 따라 작업할 이슈를 확인한 뒤, SPEC.md와 대조해 충돌 여부를 검토한다. /implement-task 실행 전에 반드시 먼저 호출해야 한다.
+---
+
+# /plan-task
+
+다음 이슈를 선정하고 구현에 들어가기 전 필요한 사전 확인을 모두 마치는 스킬.
+`/implement-task` 실행 전 반드시 먼저 실행한다.
+
+---
+
+## 절차
+
+### 0. 사용자 특정 요청 확인
+
+사용자가 스킬 호출 시 구체적인 작업 요청(예: "Issue #N", "PLAN.md의 Phase 8" 등)을 함께 전달했는지 확인한다.
+- **구체적인 요청이 있는 경우**: 1~3번 단계를 생략하고, 해당 작업을 작업 이슈로 선정한 뒤 바로 **4. SPEC.md 관련 섹션 확인**으로 넘어간다.
+- **요청이 없는 경우**: 아래 1번 단계부터 차례대로 진행한다.
+
+### 1. 로컬 브랜치를 origin과 동기화
+
+```bash
+git pull origin develop
+```
+
+충돌이 발생하면 즉시 사용자에게 알리고 스킬을 중단한다. 해결 없이 다음 단계로 넘어가지 않는다.
+
+### 2. 현황 파악 (병렬 실행)
+
+다음 세 가지를 **한 번에 병렬**로 실행해 전체 상태를 파악한다.
+
+```bash
+gh issue list --state open      # 남은 이슈 목록
+gh pr list                      # 열린 PR 목록
+git log --oneline -10           # 최근 커밋 흐름
+```
+
+`PLAN.md`도 읽어 PR 전략 표와 각 Phase 체크박스 상태를 확인한다.
+
+### 3. 다음 작업 이슈 선정
+
+`PLAN.md`의 Phase 순서를 기준으로 아직 완료되지 않은 가장 앞 Phase를 찾는다.
+
+- Phase 내 모든 항목이 `[x]`이면 → 다음 Phase로 이동
+- 현재 Phase가 부분 완료 상태면 → 해당 Phase를 계속 진행
+- 선정한 이슈 번호와 제목을 사용자에게 보여주고 확인을 받는다
+
+> "다음 작업: Issue #N — [제목]. 진행할까요?"
+
+사용자가 다른 이슈를 지정하면 그 이슈를 따른다.
+
+### 4. SPEC.md 관련 섹션 확인
+
+선정한 이슈가 구현하는 Feature(A~H)에 해당하는 `SPEC.md` 섹션을 읽는다.
+
+판단 기준:
+- **정의와 일치** → 그대로 진행
+- **정의와 충돌** → 구현을 멈추고 사용자에게 알림:
+  > "`SPEC.md`와 다른 부분이 있습니다. 문서를 업데이트할까요, 아니면 기존 정의를 따를까요?"
+- **정의 없음** → 사용자에게 알림:
+  > "`SPEC.md`에 항목이 없습니다. 먼저 추가한 뒤 구현할까요?"
+
+### 5. Worktree 및 브랜치 생성
+
+이슈와 SPEC 확인이 끝나면 `origin/develop` 기준으로 새 worktree와 브랜치를 만든다.
+
+**브랜치 이름 규칙:** `feature/issue-N-kebab-title`
+- 이슈 제목을 소문자 kebab-case로 변환하고 30자 이내로 자른다.
+- 예: Issue #6 "CSV Import/Export" → `feature/issue-6-csv-import-export`
+
+**Worktree 경로 규칙:** 저장소 루트의 **한 단계 위** 형제 디렉터리로 생성한다.
+- 형식: `../<repo-name>-<branch-suffix>`
+- 예: `../claude-vercel-wbs-issue-6-csv-import-export`
+
+실행 순서:
+
+```bash
+# 1) origin/develop 최신화
+git fetch origin develop
+
+# 2) worktree + 브랜치 동시 생성 (origin/develop 기준)
+git worktree add <worktree-path> -b <branch-name> origin/develop
+```
+
+생성 후 경로와 브랜치명을 사용자에게 출력한다:
+
+> "Worktree 생성 완료: `../claude-vercel-wbs-issue-N-xxx` (브랜치: `feature/issue-N-xxx`)"
+>
+> 이후 작업은 해당 worktree 경로에서 진행됩니다.
+
+실패 시(경로 충돌·브랜치 중복 등) 즉시 사용자에게 알리고 스킬을 중단한다.
+
+### 6. 계획 요약 출력
+
+모든 확인이 끝나면 다음 형식으로 요약을 출력하고 스킬을 종료한다.
+
+```
+✅ 계획 수립 완료
+- 작업 이슈: #N — [제목]
+- 관련 SPEC: Feature X (SPEC.md §X)
+- PLAN.md Phase: Phase N
+- Worktree: ../claude-vercel-wbs-issue-N-xxx
+- 브랜치: feature/issue-N-xxx
+- 준비 완료. /implement-task 를 실행해서 구현을 시작하세요.
+```
+
+---
+
+## 규칙
+
+- `git pull` 충돌 시 스킬을 중단한다. 강제 진행하지 않는다.
+- SPEC.md 충돌·미정의 시 임의로 해석하지 않고 반드시 사용자에게 확인한다.
+- 이슈 선정은 PLAN.md 순서를 기본으로 하되, 사용자 지시가 우선이다.
+- Worktree 생성 실패 시 스킬을 중단한다. 강제 진행하지 않는다.
+- 한국어로 대화한다.
