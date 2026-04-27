@@ -1,0 +1,178 @@
+# WBS 앱 완성 실행 계획
+
+> 각 Phase 완료 시 `- [ ]` → `- [x]`로 업데이트
+
+## 최종 체크리스트 (README.md 기준)
+
+- [ ] `supabase start`로 Postgres·Studio 컨테이너 기동
+- [ ] `npm run dev`로 Next.js 앱이 로컬 Supabase에 연결되어 동작
+- [ ] Task 생성/수정/삭제, 부모-자식 계층, 진행률, 담당자, 시작일, due_date, CSV Import/Export 동작
+- [ ] 간트형 뷰: start_date~due_date 가로 막대 + 진행률 채우기
+- [ ] `main` push → GitHub Actions `db-migrate` 워크플로우 성공(✅)
+- [ ] Vercel 공개 URL + 원격 Supabase 연결 정상 동작
+- [ ] GitHub Issue 탭에 WBS 기능 스펙 이슈 등록
+
+---
+
+## Phase 0 — 환경 점검 및 GitHub 이슈 등록
+
+- [x] `docker info`, `supabase --version`, `node -v`, `vercel --version`, `gh auth status` 모두 ✅
+- [x] GitHub 이슈 11개 등록 (`gh issue create` 루프)
+
+---
+
+## Phase 1 — Next.js 앱 부트스트랩
+
+**커밋 목표:** `feat: #1 Next.js + Chakra UI v3 + Supabase + Drizzle 부트스트랩`
+
+- [ ] `package.json` — next, react, typescript, @chakra-ui/react@^3, @supabase/supabase-js, drizzle-orm, postgres, drizzle-kit
+- [ ] `tsconfig.json`, `next.config.ts`
+- [ ] `app/layout.tsx` — ChakraProvider 포함
+- [ ] `app/providers.tsx` — Chakra UI v3 ColorModeProvider
+- [ ] `app/page.tsx` — 홈 페이지 골격
+- [ ] `lib/supabase/client.ts`, `lib/supabase/server.ts`
+- [ ] `lib/db/schema.ts` — tasks 테이블 (CLAUDE.md §3 정의)
+- [ ] `lib/db/index.ts` — Drizzle 클라이언트
+- [ ] `drizzle.config.ts` — CLAUDE.md §6 규약
+- [ ] `package.json` 스크립트: `db:generate`, `db:migrate`, `db:studio`
+
+---
+
+## Phase 2 — DB 스키마 + 로컬 Supabase 기동
+
+**커밋 목표:** `feat: #2 tasks 스키마 정의 및 Drizzle 마이그레이션 생성`
+
+- [ ] `supabase init` (최초 1회)
+- [ ] `supabase start` → Docker 컨테이너 기동 확인
+- [ ] `.env.local` 작성 (supabase status 값 반영)
+- [ ] `npm run db:generate` → `drizzle/0000_*.sql` 생성
+- [ ] `npm run db:migrate` → 로컬 DB에 tasks 테이블 적용
+- [ ] Supabase Studio(http://localhost:54323)에서 tasks 테이블 확인
+
+---
+
+## Phase 3 — Task 목록 + CRUD API
+
+**커밋 목표:** `feat: #3 Task 생성/수정/삭제 API + 목록 UI`
+
+- [ ] `app/api/tasks/route.ts` — GET, POST
+- [ ] `app/api/tasks/[id]/route.ts` — PUT, DELETE
+- [ ] `components/task-list.tsx`
+- [ ] `components/task-row.tsx`
+- [ ] `components/task-form-modal.tsx`
+- [ ] `components/task-delete-dialog.tsx`
+- [ ] `components/status-badge.tsx`
+- [ ] `components/task-menu.tsx`
+- [ ] `app/page.tsx` — TaskList + "Task 추가" 버튼
+
+---
+
+## Phase 4 — 부모-자식 계층 + 들여쓰기
+
+**커밋 목표:** `feat: #4 Task 계층 표시 및 들여쓰기`
+
+- [ ] GET /api/tasks 트리 구조 재구성 (parentId 기준)
+- [ ] TaskRow에 depth prop → paddingLeft 들여쓰기
+- [ ] 부모 Task ▼/▶ 토글 아이콘
+- [ ] ⋯ 메뉴 "하위 Task 추가" 항목
+- [ ] J3(하위 Task 생성), J4(접기/펼치기) 시나리오 수동 검증
+
+---
+
+## Phase 5 — 필드 편집
+
+**커밋 목표:** `feat: #5 진행률·상태·담당자·날짜 편집`
+
+- [ ] TaskFormModal — 진행률(Slider), 상태(Select), 담당자(Input), 시작일/목표 기한(date Input)
+- [ ] 유효성: dueDate >= startDate (J17)
+- [ ] 진행률 100% → status 자동 "done" (J5)
+- [ ] StatusBadge 클릭 인라인 순환 (J6)
+- [ ] J5, J6, J7, J17 시나리오 수동 검증
+
+---
+
+## Phase 6 — CSV Import/Export
+
+**커밋 목표:** `feat: #6 CSV Import/Export`
+
+- [ ] `components/csv-export-button.tsx` — `wbs-YYYY-MM-DD.csv` 다운로드
+- [ ] `components/csv-import-button.tsx` — 파일 선택 → 미리보기 → 적용
+- [ ] `app/api/tasks/import/route.ts` — 배치 insert
+- [ ] J10(Export), J11(Import 성공), J12(Import 부분 오류) 시나리오 검증
+
+---
+
+## Phase 7 — 간트형 시각화 뷰
+
+**커밋 목표:** `feat: #7 간트형 일정 시각화 뷰`
+
+- [ ] `components/gantt-view.tsx` — 좌측 트리 + 우측 날짜 그리드
+- [ ] "목록 | 간트" 탭 토글 (Chakra UI Tabs)
+- [ ] 주(week) 단위 컬럼 헤더 + 오늘 수직선
+- [ ] Task 막대: start_date~due_date, 진행률 채우기
+- [ ] 날짜 없는 Task "— 일정 없음 —" 표시
+- [ ] J13, J14, J16 시나리오 검증
+
+---
+
+## Phase 8 — Overdue 시각 표시
+
+**커밋 목표:** `feat: #11 기한 초과(Overdue) Task 시각 표시`
+
+- [ ] 목록 뷰: dueDate 빨간 텍스트 + "기한 초과" 배지
+- [ ] 간트 뷰: 막대에 빨간 테두리 또는 빗금 오버레이
+- [ ] J9, J15 시나리오 검증
+
+---
+
+## Phase 9 — Supabase Cloud + GitHub Actions CI
+
+- [ ] Supabase Cloud 프로젝트 생성 (리전: Northeast Asia Seoul)
+- [ ] Direct URL (port 5432) 수집 → `PRODUCTION_DATABASE_URL`
+- [ ] Transaction Pooler URL (port 6543) 수집 → Vercel용 `DATABASE_URL`
+- [ ] GitHub Settings → Environments → `production` 생성 + secret 등록
+- [ ] `develop` → `main` 병합 후 push
+- [ ] `gh run watch` → `db-migrate` 워크플로우 ✅ 확인
+- [ ] Supabase Studio Table Editor에서 tasks 테이블 확인
+
+---
+
+## Phase 10 — Vercel 배포
+
+- [ ] Vercel 프로젝트 연결 (`vercel`)
+- [ ] 환경변수 등록: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `DATABASE_URL` (Transaction Pooler)
+- [ ] `vercel --prod` → 공개 URL 획득
+- [ ] 배포 URL에서 Task CRUD, CSV, 간트, Overdue 전 기능 동작 확인
+
+---
+
+## 핵심 생성 파일 목록
+
+```
+app/
+  layout.tsx
+  page.tsx
+  providers.tsx
+  api/tasks/route.ts
+  api/tasks/[id]/route.ts
+  api/tasks/import/route.ts
+components/
+  task-list.tsx
+  task-row.tsx
+  task-form-modal.tsx
+  task-delete-dialog.tsx
+  task-menu.tsx
+  status-badge.tsx
+  gantt-view.tsx
+  csv-export-button.tsx
+  csv-import-button.tsx
+lib/db/schema.ts
+lib/db/index.ts
+lib/supabase/client.ts
+lib/supabase/server.ts
+drizzle.config.ts
+package.json
+tsconfig.json
+next.config.ts
+.env.local  ← git 커밋 안 함
+```
