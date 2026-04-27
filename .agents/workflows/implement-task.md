@@ -51,7 +51,7 @@ npm run build
 
 ```bash
 git add <관련 파일>
-git commit -m "feat: #N [이슈 제목 요약]\n\n- 변경 내용 요약\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
+git commit -m "feat: #N [이슈 제목 요약]\n\n- 변경 내용 요약\n\nCo-Authored-By: Gemini <noreply@google.com>"
 git push origin develop
 ```
 
