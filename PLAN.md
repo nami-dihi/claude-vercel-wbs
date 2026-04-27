@@ -25,7 +25,7 @@
 | PR #3 | Phase 6 | CSV Import/Export | ✅ merged ([#22](https://github.com/nami-dihi/claude-vercel-wbs/pull/22)) |
 | PR #4 | Phase 7 | 간트형 시각화 뷰 | ✅ merged ([#26](https://github.com/nami-dihi/claude-vercel-wbs/pull/26)) |
 | PR #5 | Phase 8 | Overdue 시각 표시 (목록 뷰) | ✅ merged ([#29](https://github.com/nami-dihi/claude-vercel-wbs/pull/29)) |
-| PR #5-1 | Phase 8 | Overdue 시각 표시 (간트 뷰 누락 수정) | 🔄 리뷰 대기 ([#30](https://github.com/nami-dihi/claude-vercel-wbs/issues/30)) |
+| PR #5-1 | Phase 8 | Overdue 시각 표시 (간트 뷰 누락 수정) | 🔄 리뷰 대기 ([#31](https://github.com/nami-dihi/claude-vercel-wbs/pull/31)) |
 | PR #6 | Phase 9~10 | CI + 배포 | ⬜ |
 
 > Issue #1은 이미 수동 close됨 (Phase 1 완료). PR #1 merge 시 `closes #2` 로 Issue #2 자동 close 예정.
