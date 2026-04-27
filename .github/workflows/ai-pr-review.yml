@@ -25,6 +25,7 @@ jobs:
         env:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_PERSONAL_ACCESS_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
         with:
           gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
@@ -46,10 +47,7 @@ jobs:
                     "add_comment_to_pending_review",
                     "pull_request_read",
                     "pull_request_review_write"
-                  ],
-                  "env": {
-                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-                  }
+                  ]
                 }
               },
               "tools": {
