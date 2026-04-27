@@ -10,6 +10,7 @@ interface Props {
   depth?: number
   hasChildren?: boolean
   isCollapsed?: boolean
+  isFirst?: boolean
   isLast?: boolean
   onToggle?: () => void
   onEdit: () => void
@@ -23,12 +24,14 @@ function isOverdue(task: Task) {
   return new Date(task.dueDate) < new Date(new Date().toDateString())
 }
 
-export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isLast, onToggle, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
+export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isFirst, isLast, onToggle, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
   const overdue = isOverdue(task)
 
   return (
     <Box
       borderBottom={isLast ? 'none' : '1px solid #242424'}
+      borderTopRadius={isFirst ? '8px' : '0'}
+      borderBottomRadius={isLast ? '8px' : '0'}
       _hover={{ bg: 'rgba(255,255,255,0.02)' }}
       transition="background 0.1s"
     >

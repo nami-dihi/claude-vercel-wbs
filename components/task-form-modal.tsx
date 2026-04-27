@@ -88,6 +88,7 @@ export default function TaskFormModal({ isOpen, task, parentId, onClose, onSubmi
     py: 2,
     _placeholder: { color: '#4d4d4d' },
     _focus: { borderColor: 'rgba(62,207,142,0.6)', outline: 'none' },
+    css: { colorScheme: 'dark' }
   }
 
   return (
@@ -164,7 +165,7 @@ export default function TaskFormModal({ isOpen, task, parentId, onClose, onSubmi
         <Flex gap={3} mb={4}>
           <Box flex={1}>
             {label('시작일')}
-            <Input {...inputStyle} type="date" value={form.startDate} onChange={e => set('startDate', e.target.value)} colorScheme="dark" />
+            <Input {...inputStyle} type="date" value={form.startDate} onChange={e => set('startDate', e.target.value)} />
           </Box>
           <Box flex={1}>
             {label('목표 기한')}

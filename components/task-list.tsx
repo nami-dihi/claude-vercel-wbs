@@ -54,7 +54,11 @@ export default function TaskList() {
   const toggleCollapse = (id: string) =>
     setCollapsed(prev => {
       const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
       return next
     })
 
@@ -171,7 +175,7 @@ export default function TaskList() {
             <Text color="#4d4d4d" fontSize="13px">상단의 &ldquo;+ Task 추가&rdquo; 버튼으로 첫 Task를 만들어 보세요.</Text>
           </Box>
         ) : (
-          <Box border="1px solid #2e2e2e" borderRadius="8px" overflow="hidden">
+          <Box border="1px solid #2e2e2e" borderRadius="8px">
             {rows.map(({ task, depth, hasChildren }, i) => (
               <TaskRow
                 key={task.id}
