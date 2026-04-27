@@ -1,0 +1,67 @@
+name: AI Code Review
+
+on:
+  workflow_run:
+    workflows: ["CI"] # ci.yml의 name 항목과 일치해야 합니다.
+    types:
+      - completed
+
+jobs:
+  gemini-review:
+    name: Gemini PR Review
+    runs-on: ubuntu-latest
+    
+    # 앞선 CI 워크플로우가 성공적으로 끝났고, 그 원인이 PR 이벤트일 때만 실행
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }}
+    
+    # 보안을 위해 PR에 코멘트를 달 수 있는 권한만 부여합니다.
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # PR의 변경 사항(Diff)을 제대로 가져오기 위해 필수
+
+      - name: Run Gemini CLI for PR Review
+        uses: google-github-actions/run-gemini-cli@v0
+        env:
+          GEMINI_TRUST_WORKSPACE: 'true'
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+        with:
+          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          github_pr_number: '${{ github.event.workflow_run.pull_requests[0].number }}'
+          extensions: |
+            [
+              "https://github.com/gemini-cli-extensions/code-review"
+            ]
+          prompt: '/pr-code-review 추가 가이드라인: 한국어로 리뷰를 작성해줘. 개선할 코드가 있다면 예시를 함께 보여줘.'
+          settings: |-
+            {
+              "mcpServers": {
+                "github": {
+                  "command": "docker",
+                  "args": [
+                    "run", "-i", "--rm",
+                    "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+                    "ghcr.io/github/github-mcp-server:v0.27.0"
+                  ],
+                  "includeTools": [
+                    "add_comment_to_pending_review",
+                    "pull_request_read",
+                    "pull_request_review_write"
+                  ],
+                  "env": {
+                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+                  }
+                }
+              },
+              "tools": {
+                "core": [
+                  "read_file"
+                ]
+              }
+            }
