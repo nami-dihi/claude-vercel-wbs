@@ -4,13 +4,13 @@
 
 ## 최종 체크리스트 (README.md 기준)
 
-- [ ] `supabase start`로 Postgres·Studio 컨테이너 기동
+- [x] `supabase start`로 Postgres·Studio 컨테이너 기동
 - [ ] `npm run dev`로 Next.js 앱이 로컬 Supabase에 연결되어 동작
 - [ ] Task 생성/수정/삭제, 부모-자식 계층, 진행률, 담당자, 시작일, due_date, CSV Import/Export 동작
 - [ ] 간트형 뷰: start_date~due_date 가로 막대 + 진행률 채우기
 - [ ] `main` push → GitHub Actions `db-migrate` 워크플로우 성공(✅)
 - [ ] Vercel 공개 URL + 원격 Supabase 연결 정상 동작
-- [ ] GitHub Issue 탭에 WBS 기능 스펙 이슈 등록
+- [x] GitHub Issue 탭에 WBS 기능 스펙 이슈 등록
 
 ---
 
@@ -20,10 +20,11 @@
 
 | PR | Phase | 내용 | 상태 |
 |---|---|---|---|
-| PR #1 | Phase 1~2 | 프로젝트 세팅 + DB 마이그레이션 | ⬜ Phase 2 완료 후 오픈 |
-| PR #2 | Phase 3~5 | Task CRUD + 계층 + 필드 편집 | ⬜ |
-| PR #3 | Phase 6~8 | CSV + 간트 + Overdue | ⬜ |
-| PR #4 | Phase 9~10 | CI + 배포 | ⬜ |
+| PR #1 | Phase 1~2 | 프로젝트 세팅 + DB 마이그레이션 | ✅ merged ([#13](https://github.com/nami-dihi/claude-vercel-wbs/pull/13)) |
+| PR #2 | Phase 3~5 | Task CRUD + 계층 + 필드 편집 | ✅ merged ([#15](https://github.com/nami-dihi/claude-vercel-wbs/pull/15)) |
+| PR #3 | Phase 6 | CSV Import/Export | ✅ merged ([#22](https://github.com/nami-dihi/claude-vercel-wbs/pull/22)) |
+| PR #4 | Phase 7~8 | 간트 + Overdue | ⬜ |
+| PR #5 | Phase 9~10 | CI + 배포 | ⬜ |
 
 > Issue #1은 이미 수동 close됨 (Phase 1 완료). PR #1 merge 시 `closes #2` 로 Issue #2 자동 close 예정.
 
@@ -53,56 +54,57 @@
 
 ---
 
-## Phase 2 — DB 스키마 + 로컬 Supabase 기동
+## Phase 2 — DB 스키마 + 로컬 Supabase 기동 ✅
 
 **커밋 목표:** `feat: #2 tasks 스키마 정의 및 Drizzle 마이그레이션 생성`
 
-- [ ] `supabase init` (최초 1회)
-- [ ] `supabase start` → Docker 컨테이너 기동 확인
-- [ ] `.env.local` 작성 (supabase status 값 반영)
-- [ ] `npm run db:generate` → `drizzle/0000_*.sql` 생성
-- [ ] `npm run db:migrate` → 로컬 DB에 tasks 테이블 적용
-- [ ] Supabase Studio(http://localhost:54323)에서 tasks 테이블 확인
+- [x] `supabase init` (최초 1회)
+- [x] `supabase start` → Docker 컨테이너 기동 확인
+- [x] `.env.local` 작성 (supabase status 값 반영)
+- [x] `npm run db:generate` → `drizzle/0000_overjoyed_gargoyle.sql` 생성
+- [x] `npm run db:migrate` → 로컬 DB에 tasks 테이블 적용
+- [ ] Supabase Studio(http://localhost:54323)에서 tasks 테이블 확인 (직접 확인 필요)
 
 ---
 
-## Phase 3 — Task 목록 + CRUD API
+## Phase 3 — Task 목록 + CRUD API ✅
 
 **커밋 목표:** `feat: #3 Task 생성/수정/삭제 API + 목록 UI`
 
-- [ ] `app/api/tasks/route.ts` — GET, POST
-- [ ] `app/api/tasks/[id]/route.ts` — PUT, DELETE
-- [ ] `components/task-list.tsx`
-- [ ] `components/task-row.tsx`
-- [ ] `components/task-form-modal.tsx`
-- [ ] `components/task-delete-dialog.tsx`
-- [ ] `components/status-badge.tsx`
-- [ ] `components/task-menu.tsx`
-- [ ] `app/page.tsx` — TaskList + "Task 추가" 버튼
+- [x] `app/api/tasks/route.ts` — GET, POST
+- [x] `app/api/tasks/[id]/route.ts` — PUT, DELETE
+- [x] `components/task-list.tsx`
+- [x] `components/task-row.tsx`
+- [x] `components/task-form-modal.tsx`
+- [x] `components/task-delete-dialog.tsx`
+- [x] `components/status-badge.tsx`
+- [x] `components/task-menu.tsx`
+- [x] `app/page.tsx` — TaskList + "Task 추가" 버튼
+- [x] Playwright J1·J2·J6·J7·J8 시나리오 통과
 
 ---
 
-## Phase 4 — 부모-자식 계층 + 들여쓰기
+## Phase 4 — 부모-자식 계층 + 들여쓰기 ✅
 
 **커밋 목표:** `feat: #4 Task 계층 표시 및 들여쓰기`
 
-- [ ] GET /api/tasks 트리 구조 재구성 (parentId 기준)
-- [ ] TaskRow에 depth prop → paddingLeft 들여쓰기
-- [ ] 부모 Task ▼/▶ 토글 아이콘
-- [ ] ⋯ 메뉴 "하위 Task 추가" 항목
-- [ ] J3(하위 Task 생성), J4(접기/펼치기) 시나리오 수동 검증
+- [x] GET /api/tasks 트리 구조 재구성 (parentId 기준)
+- [x] TaskRow에 depth prop → paddingLeft 들여쓰기
+- [x] 부모 Task ▼/▶ 토글 아이콘
+- [x] ⋯ 메뉴 "하위 Task 추가" 항목
+- [x] J3(하위 Task 생성), J4(접기/펼치기) 시나리오 통과
 
 ---
 
-## Phase 5 — 필드 편집
+## Phase 5 — 필드 편집 ✅
 
 **커밋 목표:** `feat: #5 진행률·상태·담당자·날짜 편집`
 
-- [ ] TaskFormModal — 진행률(Slider), 상태(Select), 담당자(Input), 시작일/목표 기한(date Input)
-- [ ] 유효성: dueDate >= startDate (J17)
-- [ ] 진행률 100% → status 자동 "done" (J5)
-- [ ] StatusBadge 클릭 인라인 순환 (J6)
-- [ ] J5, J6, J7, J17 시나리오 수동 검증
+- [x] TaskFormModal — 진행률(Slider), 상태(Select), 담당자(Input), 시작일/목표 기한(date Input)
+- [x] 유효성: dueDate >= startDate (J17)
+- [x] 진행률 100% → status 자동 "done" (J5)
+- [x] StatusBadge 클릭 인라인 순환 (J6)
+- [x] J5, J6, J7, J17 시나리오 수동 검증
 
 ---
 
