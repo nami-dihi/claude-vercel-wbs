@@ -21,7 +21,7 @@ interface Props {
 
 function isOverdue(task: Task) {
   if (!task.dueDate || task.status === 'done') return false
-  const today = new Date().toLocaleDateString('en-CA') // 'YYYY-MM-DD'
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Seoul' }) // 'YYYY-MM-DD'
   return task.dueDate < today
 }
 
