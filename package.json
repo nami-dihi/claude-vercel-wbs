@@ -1,0 +1,35 @@
+{
+  "name": "claude-vercel-wbs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3",
+    "@supabase/ssr": "^0.5",
+    "@supabase/supabase-js": "^2",
+    "drizzle-orm": "^0.38",
+    "next": "^15",
+    "postgres": "^3",
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.30",
+    "eslint": "^9",
+    "eslint-config-next": "^15",
+    "typescript": "^5"
+  }
+}
