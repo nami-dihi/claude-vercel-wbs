@@ -107,20 +107,36 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
         </Box>
 
         {/* 날짜 */}
-        <Box w="100px" flexShrink={0} display={{ base: 'none', md: 'block' }}>
+        <Flex align="center" gap={1.5} w="120px" flexShrink={0} display={{ base: 'none', md: 'flex' }}>
           {task.dueDate ? (
-            <Text
-              fontSize="12px"
-              color={overdue ? '#f87171' : '#898989'}
-              fontWeight={overdue ? 500 : 400}
-            >
-              {overdue && <Box as="span" mr={1}>⚠</Box>}
-              {task.dueDate}
-            </Text>
+            <>
+              <Text
+                fontSize="12px"
+                color={overdue ? '#f87171' : '#898989'}
+                fontWeight={overdue ? 500 : 400}
+              >
+                {task.dueDate}
+              </Text>
+              {overdue && (
+                <Box
+                  as="span"
+                  bg="rgba(248, 113, 113, 0.1)"
+                  color="#f87171"
+                  fontSize="10px"
+                  fontWeight={500}
+                  px={1.5}
+                  py={0.5}
+                  borderRadius="4px"
+                  border="1px solid rgba(248, 113, 113, 0.2)"
+                >
+                  지남
+                </Box>
+              )}
+            </>
           ) : (
             <Text fontSize="12px" color="#434343">—</Text>
           )}
-        </Box>
+        </Flex>
 
         {/* 메뉴 */}
         <Box w="28px" flexShrink={0} display="flex" justifyContent="flex-end" onClick={(e) => e.stopPropagation()}>

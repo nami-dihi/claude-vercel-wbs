@@ -23,8 +23,9 @@
 | PR #1 | Phase 1~2 | 프로젝트 세팅 + DB 마이그레이션 | ✅ merged ([#13](https://github.com/nami-dihi/claude-vercel-wbs/pull/13)) |
 | PR #2 | Phase 3~5 | Task CRUD + 계층 + 필드 편집 | ✅ merged ([#15](https://github.com/nami-dihi/claude-vercel-wbs/pull/15)) |
 | PR #3 | Phase 6 | CSV Import/Export | ✅ merged ([#22](https://github.com/nami-dihi/claude-vercel-wbs/pull/22)) |
-| PR #4 | Phase 7~8 | 간트 + Overdue | ⬜ |
-| PR #5 | Phase 9~10 | CI + 배포 | ⬜ |
+| PR #4 | Phase 7 | 간트형 시각화 뷰 | 🔄 리뷰 대기 ([#26](https://github.com/nami-dihi/claude-vercel-wbs/pull/26)) |
+| PR #5 | Phase 8 | Overdue 시각 표시 | 🔄 리뷰 대기 ([#29](https://github.com/nami-dihi/claude-vercel-wbs/pull/29)) |
+| PR #6 | Phase 9~10 | CI + 배포 | ⬜ |
 
 > Issue #1은 이미 수동 close됨 (Phase 1 완료). PR #1 merge 시 `closes #2` 로 Issue #2 자동 close 예정.
 
@@ -136,9 +137,10 @@
 
 **커밋 목표:** `feat: #11 기한 초과(Overdue) Task 시각 표시`
 
-- [ ] 목록 뷰: dueDate 빨간 텍스트 + "기한 초과" 배지
+- [x] 목록 뷰: dueDate 빨간 텍스트 + "기한 초과" 배지
 - [ ] 간트 뷰: 막대에 빨간 테두리 또는 빗금 오버레이
-- [ ] J9, J15 시나리오 검증
+- [x] J9 시나리오 검증
+- [ ] J15 시나리오 검증
 
 ---
 
