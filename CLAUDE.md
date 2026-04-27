@@ -84,6 +84,13 @@
 - Supabase (로컬: Docker, 원격: Cloud) — DB · Auth · RLS · Storage · Realtime
 - **Drizzle ORM** — Postgres용 타입 안전 쿼리 레이어
 - **Chakra UI v3** — UI 컴포넌트 (Tailwind · shadcn/ui · MUI 등 다른 UI 라이브러리 혼용 금지)
+- **UI 디자인 시스템** — 모든 컴포넌트·화면 구현 시 `DESIGN-supabase.md`를 단일 기준으로 따른다.
+  - 배경: near-black (`#171717`), 텍스트: `#fafafa`(primary) / `#b4b4b4`(secondary)
+  - 브랜드 그린(`#3ecf8e`, `#00c573`)은 링크·아이콘·액센트 보더 등 포인트에만 사용
+  - 깊이는 그림자가 아닌 보더 계층(`#242424` → `#2e2e2e` → `#363636`)으로 표현
+  - 버튼: primary는 pill(9999px), secondary는 6px radius
+  - 폰트 weight는 400 기본, 버튼·내비게이션만 500 — bold(700) 사용 금지
+  - 상세 토큰·컴포넌트 스타일은 `DESIGN-supabase.md` §2~4 참고
 - Node.js 20+
 - Package manager: **npm** (pnpm · yarn · bun 혼용 금지)
 - 배포: Vercel
@@ -262,6 +269,7 @@ export default defineConfig({
 | `README.md` | 수강생 | 과제 안내 + 실습 가이드 + 배포 절차 |
 | `SPEC.md` | 모두 | 사용자 관점 기능 스펙 (UX의 단일 원천) |
 | `USER_JOURNEY.md` | 테스터 / Claude | Given/When/Then 시나리오 — 테스트·수동 검증 근거 |
+| `DESIGN-supabase.md` | Claude Code | UI 디자인 시스템 — 컬러 토큰·타이포그래피·컴포넌트 스타일 기준 |
 | `CLAUDE.md` (이 파일) | Claude Code | 스택 · 워크플로우 · 금기사항 |
 
 ### 내장 슬래시 스킬 (`.claude/skills/`)
