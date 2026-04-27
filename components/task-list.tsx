@@ -7,24 +7,56 @@ import TaskRow from './task-row'
 import TaskFormModal from './task-form-modal'
 import TaskDeleteDialog from './task-delete-dialog'
 
+type TreeNode = Task & { children: TreeNode[] }
+
 const NEXT_STATUS: Record<string, 'todo' | 'doing' | 'done'> = {
   todo: 'doing', doing: 'done', done: 'todo',
 }
 
-function countChildren(tasks: Task[], parentId: string): number {
+function buildTree(tasks: Task[], parentId: string | null = null): TreeNode[] {
+  return tasks
+    .filter(t => (t.parentId ?? null) === parentId)
+    .map(t => ({ ...t, children: buildTree(tasks, t.id) }))
+}
+
+function flattenTree(
+  nodes: TreeNode[],
+  collapsed: Set<string>,
+  depth = 0
+): Array<{ task: TreeNode; depth: number; hasChildren: boolean }> {
+  return nodes.flatMap(node => {
+    const hasChildren = node.children.length > 0
+    return [
+      { task: node, depth, hasChildren },
+      ...(!collapsed.has(node.id) && hasChildren
+        ? flattenTree(node.children, collapsed, depth + 1)
+        : []),
+    ]
+  })
+}
+
+function countDescendants(tasks: Task[], parentId: string): number {
   return tasks.reduce((acc, t) => {
-    if (t.parentId === parentId) return acc + 1 + countChildren(tasks, t.id)
+    if (t.parentId === parentId) return acc + 1 + countDescendants(tasks, t.id)
     return acc
   }, 0)
 }
 
 export default function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [deletingTask, setDeletingTask] = useState<Task | null>(null)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [newParentId, setNewParentId] = useState<string | null>(null)
+
+  const toggleCollapse = (id: string) =>
+    setCollapsed(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
 
   const fetchTasks = useCallback(async () => {
     const res = await fetch('/api/tasks')
@@ -71,6 +103,7 @@ export default function TaskList() {
   }
 
   const isModalOpen = isCreateOpen || editingTask !== null
+  const rows = tasks.length > 0 ? flattenTree(buildTree(tasks), collapsed) : []
 
   return (
     <Box minH="100vh" bg="#171717" p={{ base: 4, md: 8 }}>
@@ -139,11 +172,15 @@ export default function TaskList() {
           </Box>
         ) : (
           <Box border="1px solid #2e2e2e" borderRadius="8px" overflow="hidden">
-            {tasks.map((task, i) => (
+            {rows.map(({ task, depth, hasChildren }, i) => (
               <TaskRow
                 key={task.id}
                 task={task}
-                isLast={i === tasks.length - 1}
+                depth={depth}
+                hasChildren={hasChildren}
+                isCollapsed={collapsed.has(task.id)}
+                isLast={i === rows.length - 1}
+                onToggle={() => toggleCollapse(task.id)}
                 onEdit={() => setEditingTask(task)}
                 onDelete={() => setDeletingTask(task)}
                 onStatusCycle={() => handleStatusCycle(task)}
@@ -164,7 +201,7 @@ export default function TaskList() {
 
       <TaskDeleteDialog
         task={deletingTask}
-        childCount={deletingTask ? countChildren(tasks, deletingTask.id) : 0}
+        childCount={deletingTask ? countDescendants(tasks, deletingTask.id) : 0}
         onClose={() => setDeletingTask(null)}
         onConfirm={() => deletingTask && handleDelete(deletingTask.id)}
       />

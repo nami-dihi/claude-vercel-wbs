@@ -12,7 +12,9 @@ description: /plan-task로 선정된 이슈를 구현하고, 빌드·Playwright 
 ## 선행 조건
 
 - `/plan-task`가 완료되어 "작업 이슈 #N"과 "PLAN.md Phase N"이 확정된 상태
-- 로컬 Supabase 컨테이너가 기동 중 (`supabase status`). 아니면 `/dev-server` 먼저 실행.
+- 로컬 Supabase 컨테이너 및 Next.js dev 서버가 기동 중이어야 한다.
+  - `supabase status`로 컨테이너 확인, `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000`으로 dev 서버 확인
+  - 둘 중 하나라도 준비되지 않았으면 `/dev-server` 스킬을 먼저 실행한다.
 
 ---
 

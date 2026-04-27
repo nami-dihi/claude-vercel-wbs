@@ -8,7 +8,10 @@ import TaskMenu from './task-menu'
 interface Props {
   task: Task
   depth?: number
+  hasChildren?: boolean
+  isCollapsed?: boolean
   isLast?: boolean
+  onToggle?: () => void
   onEdit: () => void
   onDelete: () => void
   onStatusCycle: () => void
@@ -20,7 +23,7 @@ function isOverdue(task: Task) {
   return new Date(task.dueDate) < new Date(new Date().toDateString())
 }
 
-export default function TaskRow({ task, depth = 0, isLast, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
+export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isLast, onToggle, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
   const overdue = isOverdue(task)
 
   return (
@@ -36,6 +39,27 @@ export default function TaskRow({ task, depth = 0, isLast, onEdit, onDelete, onS
         gap={3}
         pl={`${16 + depth * 24}px`}
       >
+        {/* 접기/펼치기 토글 */}
+        <Box w="16px" flexShrink={0} display="flex" alignItems="center" justifyContent="center">
+          {hasChildren ? (
+            <Box
+              as="button"
+              onClick={onToggle}
+              fontSize="10px"
+              color="#898989"
+              cursor="pointer"
+              bg="transparent"
+              border="none"
+              p={0}
+              lineHeight={1}
+              _hover={{ color: '#fafafa' }}
+              userSelect="none"
+            >
+              {isCollapsed ? '▶' : '▼'}
+            </Box>
+          ) : null}
+        </Box>
+
         {/* 제목 */}
         <Box flex={1} minW={0}>
           <Text
