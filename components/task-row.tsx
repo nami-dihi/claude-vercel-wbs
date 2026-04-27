@@ -21,7 +21,8 @@ interface Props {
 
 function isOverdue(task: Task) {
   if (!task.dueDate || task.status === 'done') return false
-  return new Date(task.dueDate) < new Date(new Date().toDateString())
+  const today = new Date().toLocaleDateString('en-CA') // 'YYYY-MM-DD'
+  return task.dueDate < today
 }
 
 export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isFirst, isLast, onToggle, onEdit, onDelete, onStatusCycle, onAddSubtask }: Props) {
@@ -34,6 +35,9 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
       borderBottomRadius={isLast ? '8px' : '0'}
       _hover={{ bg: 'rgba(255,255,255,0.02)' }}
       transition="background 0.1s"
+      onClick={onEdit}
+      cursor="pointer"
+      role="group"
     >
       <Flex
         align="center"
@@ -46,7 +50,7 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
           {hasChildren ? (
             <Box
               as="button"
-              onClick={onToggle}
+              onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
               fontSize="10px"
               color="#898989"
               cursor="pointer"
@@ -71,9 +75,8 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
             overflow="hidden"
             textOverflow="ellipsis"
             whiteSpace="nowrap"
-            cursor="pointer"
-            _hover={{ color: '#3ecf8e' }}
-            onClick={onEdit}
+            transition="color 0.1s"
+            _groupHover={{ color: '#3ecf8e' }}
           >
             {task.title}
           </Text>
@@ -93,14 +96,14 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
               transition="width 0.2s"
             />
           </Box>
-          <Text fontSize="11px" color="#898989" w="32px" textAlign="right" whiteSpace="nowrap">
+          <Text fontSize="11px" color="#898989" w="32px" textAlign="left" whiteSpace="nowrap">
             {task.progress}%
           </Text>
         </Flex>
 
         {/* 상태 */}
         <Box w="72px" flexShrink={0}>
-          <StatusBadge status={task.status as 'todo' | 'doing' | 'done'} onClick={onStatusCycle} />
+          <StatusBadge status={task.status as 'todo' | 'doing' | 'done'} onClick={(e) => { e.stopPropagation(); onStatusCycle(); }} />
         </Box>
 
         {/* 날짜 */}
@@ -120,7 +123,7 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
         </Box>
 
         {/* 메뉴 */}
-        <Box w="28px" flexShrink={0} display="flex" justifyContent="flex-end">
+        <Box w="28px" flexShrink={0} display="flex" justifyContent="flex-end" onClick={(e) => e.stopPropagation()}>
           <TaskMenu onEdit={onEdit} onDelete={onDelete} onAddSubtask={onAddSubtask} />
         </Box>
       </Flex>

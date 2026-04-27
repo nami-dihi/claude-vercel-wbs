@@ -63,9 +63,14 @@ export default function TaskList() {
     })
 
   const fetchTasks = useCallback(async () => {
-    const res = await fetch('/api/tasks')
-    setTasks(await res.json())
-    setLoading(false)
+    try {
+      const res = await fetch('/api/tasks')
+      setTasks(await res.json())
+    } catch {
+      // 네트워크 오류 시 빈 목록 유지
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => { fetchTasks() }, [fetchTasks])

@@ -1,12 +1,12 @@
-# CLAUDE.md
+# GEMINI.md
 
-이 문서는 **Claude Code 에이전트**가 이 저장소에서 작업할 때 반드시 따라야 하는 프로젝트 지침이다. 수강생(사용자)을 위한 안내는 `README.md`에 있다.
+이 문서는 **Gemini 에이전트**가 이 저장소에서 작업할 때 반드시 따라야 하는 프로젝트 지침이다. 수강생(사용자)을 위한 안내는 `README.md`에 있다.
 
 ## 1. 프로젝트 목적
 
-교육용 WBS(Work Breakdown Structure) 과제. 수강생(코드 초심자)이 **스스로 타이핑하지 않고 Claude Code에게 지시**해서, Next.js 기반 WBS 앱을 만들고 로컬 Supabase(Docker)로 개발한 뒤 Vercel + 원격 Supabase로 배포해 공개 URL을 획득하는 것이 목표다.
+교육용 WBS(Work Breakdown Structure) 과제. 수강생(코드 초심자)이 **스스로 타이핑하지 않고 Gemini에게 지시**해서, Next.js 기반 WBS 앱을 만들고 로컬 Supabase(Docker)로 개발한 뒤 Vercel + 원격 Supabase로 배포해 공개 URL을 획득하는 것이 목표다.
 
-이 구조상 Claude의 역할은 단순히 코드를 빠르게 만들어 주는 것이 아니라, **수강생이 각 단계를 이해할 수 있도록 결과를 설명하는 것**이다. 따라서:
+이 구조상 Gemini의 역할은 단순히 코드를 빠르게 만들어 주는 것이 아니라, **수강생이 각 단계를 이해할 수 있도록 결과를 설명하는 것**이다. 따라서:
 
 - 한 번의 응답에 너무 많은 파일을 동시에 생성·수정하지 않는다. 가급적 **GitHub Issue 하나 = 커밋 하나** 단위로 쪼갠다.
 - 변경을 적용하기 전에 의도를 한국어 한두 문장으로 먼저 설명한다.
@@ -14,7 +14,7 @@
 
 ## 1-A. 첫 프롬프트 시작 규약 (반드시 따를 것)
 
-수강생이 이 저장소를 **클론한 뒤 처음 말을 걸어왔을 때**(= 대화 세션에서 아직 아무 작업도 하지 않은 상태), Claude는 수강생의 요구가 무엇이든 간에 먼저 본인이 해야 할 일을 시작하기 **전에** 아래 2-스텝 체크를 제안하고 각 단계에서 승인을 받는다.
+수강생이 이 저장소를 **클론한 뒤 처음 말을 걸어왔을 때**(= 대화 세션에서 아직 아무 작업도 하지 않은 상태), Gemini는 수강생의 요구가 무엇이든 간에 먼저 본인이 해야 할 일을 시작하기 **전에** 아래 2-스텝 체크를 제안하고 각 단계에서 승인을 받는다.
 
 > "이 세션이 처음인가?"를 판단하는 단서: 대화 초반이며 아직 `supabase status`/`npm run dev`/`ls` 등 저장소 상태 확인 결과가 없음.
 
@@ -56,7 +56,7 @@
 | `SPEC.md` | **제품 스펙의 단일 진실 원천.** 각 페이지에서 사용자가 무엇을 할 수 있고 무엇을 기대하는가. | 기술 용어·구현 상세(스키마·컴포넌트 이름 등)는 담지 않는다. |
 | `USER_JOURNEY.md` | `SPEC.md`의 기능을 Given/When/Then 시나리오로 풀어둔 문서. 테스트·수동 검증의 근거. | 시나리오 ID(J1, J2, …)는 재사용·재부여하지 않는다. |
 
-### Claude의 행동 규칙
+### Gemini의 행동 규칙
 
 1. **기능 구현·변경 요청이 들어오면 먼저 `SPEC.md`를 읽는다.**
    - 요청이 이미 정의돼 있으면 그대로 따른다 (임의 재해석 금지).
@@ -67,9 +67,9 @@
    - 시나리오에 대응하는 테스트가 없으면 먼저 테스트를 추가.
    - 대응 시나리오가 없는 케이스는 `USER_JOURNEY.md`에 시나리오를 먼저 정의하고, 그 뒤에 테스트를 쓴다.
 
-3. **Playwright MCP로 수동 검증**할 때는 `USER_JOURNEY.md` 하단의 "수동 회귀 체크리스트"를 기본 실행 순서로 사용한다. 체크 결과를 사용자에게 보고할 때 시나리오 ID(예: "J13 통과, J15 실패 — 간트에 Overdue 빗금이 없음")로 지칭한다.
+3. **브라우저(browser) 도구로 수동 검증**할 때는 `USER_JOURNEY.md` 하단의 "수동 회귀 체크리스트"를 기본 실행 순서로 사용한다. 브라우저 테스트 시 로컬 개발 서버를 다른 에이전트와 겹치지 않도록 새로운 포트에서 샌드박스로 실행한다(예: 3000번이 아니라 3100번 등). 체크 결과를 사용자에게 보고할 때 시나리오 ID(예: "J13 통과, J15 실패 — 간트에 Overdue 빗금이 없음")로 지칭한다.
 
-4. **두 문서는 모두 한국어 자연어로 유지**한다. SQL·필드명·컴포넌트 이름·프레임워크 API 등 구현 어휘는 `SPEC.md`/`USER_JOURNEY.md`에 들어가지 않는다. 그런 어휘가 필요하면 이 `CLAUDE.md` 또는 코드 주석으로 간다.
+4. **두 문서는 모두 한국어 자연어로 유지**한다. SQL·필드명·컴포넌트 이름·프레임워크 API 등 구현 어휘는 `SPEC.md`/`USER_JOURNEY.md`에 들어가지 않는다. 그런 어휘가 필요하면 이 `GEMINI.md` 또는 코드 주석으로 간다.
 
 5. `SPEC.md`의 **"9. 범위 밖"** 섹션은 §10 금기사항의 "과제 범위 밖 기능" 기준으로 작동한다. 범위 밖 항목을 범위 안으로 옮기려면 `SPEC.md`부터 수정.
 
@@ -191,10 +191,6 @@ npm run dev                     # Next.js 개발 서버
 npm run build && npm run lint   # 검증
 ```
 
-### 브라우저 자동 테스트 (에이전트) 규약
-
-브라우저 에이전트(Subagent) 등을 사용하여 UI나 기능을 자동 테스트할 경우, 다른 에이전트나 사용자의 실행 환경과 포트가 겹치지 않도록 **반드시 비어있는 다른 포트 번호(예: `PORT=3014 npm run dev`)로 샌드박스에서 독립적인 개발 서버를 실행**한 뒤 테스트를 진행한다.
-
 ### 스키마 변경 순서 (반드시 이 순서)
 
 1. `lib/db/schema.ts` 를 수정.
@@ -208,7 +204,7 @@ npm run build && npm run lint   # 검증
 
 ### `drizzle.config.ts` 규약
 
-Claude가 Drizzle 부트스트랩을 할 때 반드시 아래 구조를 유지한다.
+Gemini가 Drizzle 부트스트랩을 할 때 반드시 아래 구조를 유지한다.
 
 ```ts
 import { defineConfig } from 'drizzle-kit';
@@ -238,11 +234,10 @@ export default defineConfig({
 
 ## 8. MCP 사용 지침
 
-이 저장소의 `.mcp.json`에는 세 MCP가 등록돼 있다. 상황별로 이렇게 쓴다.
+이 저장소의 `.mcp.json`에는 두 MCP가 등록돼 있다. 상황별로 이렇게 쓴다.
 
 - `context7` — Next.js / Supabase / Drizzle API가 애매하거나 버전 차이가 의심되면 먼저 질의. 추측보다 문서 인용 우선.
 - `chakra-ui` — Chakra UI 컴포넌트 이름·prop·theming이 필요할 때. Chakra v3 기준이라는 점을 기억할 것(v2와 API가 다름).
-- `playwright` — 로컬/배포 환경의 실제 브라우저 검증. 예: "배포된 URL에서 Task 하나 만들고 목록에 뜨는지 확인".
 
 ## 9. 커밋·작업 스타일
 
@@ -272,11 +267,11 @@ export default defineConfig({
 |---|---|---|
 | `README.md` | 수강생 | 과제 안내 + 실습 가이드 + 배포 절차 |
 | `SPEC.md` | 모두 | 사용자 관점 기능 스펙 (UX의 단일 원천) |
-| `USER_JOURNEY.md` | 테스터 / Claude | Given/When/Then 시나리오 — 테스트·수동 검증 근거 |
-| `DESIGN-supabase.md` | Claude Code | UI 디자인 시스템 — 컬러 토큰·타이포그래피·컴포넌트 스타일 기준 |
-| `CLAUDE.md` (이 파일) | Claude Code | 스택 · 워크플로우 · 금기사항 |
+| `USER_JOURNEY.md` | 테스터 / Gemini | Given/When/Then 시나리오 — 테스트·수동 검증 근거 |
+| `DESIGN-supabase.md` | Gemini | UI 디자인 시스템 — 컬러 토큰·타이포그래피·컴포넌트 스타일 기준 |
+| `GEMINI.md` (이 파일) | Gemini | 스택 · 워크플로우 · 금기사항 |
 
-### 내장 슬래시 스킬 (`.claude/skills/`)
+### 내장 슬래시 스킬 (`.gemini/antigravity/skills/`)
 
 | 슬래시 명령 | 언제 사용 |
 |---|---|
@@ -287,7 +282,6 @@ export default defineConfig({
 
 - `context7` — Next.js/Supabase/Drizzle 라이브러리 최신 문서 인용
 - `chakra-ui` — Chakra UI v3 컴포넌트 API 참조
-- `playwright` — 브라우저 검증(배포 URL 확인 · USER_JOURNEY 시나리오 수동 회귀)
 
 ### CI/CD (`.github/workflows/`)
 

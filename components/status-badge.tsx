@@ -1,5 +1,6 @@
 'use client'
 
+import type { MouseEvent } from 'react'
 import { Box } from '@chakra-ui/react'
 
 type Status = 'todo' | 'doing' | 'done'
@@ -18,7 +19,7 @@ const STYLE: Record<Status, { bg: string; color: string; border: string }> = {
 
 interface Props {
   status: Status
-  onClick?: () => void
+  onClick?: (e: MouseEvent) => void
 }
 
 export default function StatusBadge({ status, onClick }: Props) {
