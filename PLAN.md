@@ -14,6 +14,21 @@
 
 ---
 
+## PR 전략 (develop → main)
+
+이슈는 PR merge 시 자동 close (`closes #N` 본문 사용). Phase를 기능 경계로 묶어 PR을 엽니다.
+
+| PR | Phase | 내용 | 상태 |
+|---|---|---|---|
+| PR #1 | Phase 1~2 | 프로젝트 세팅 + DB 마이그레이션 | ⬜ Phase 2 완료 후 오픈 |
+| PR #2 | Phase 3~5 | Task CRUD + 계층 + 필드 편집 | ⬜ |
+| PR #3 | Phase 6~8 | CSV + 간트 + Overdue | ⬜ |
+| PR #4 | Phase 9~10 | CI + 배포 | ⬜ |
+
+> Issue #1은 이미 수동 close됨 (Phase 1 완료). PR #1 merge 시 `closes #2` 로 Issue #2 자동 close 예정.
+
+---
+
 ## Phase 0 — 환경 점검 및 GitHub 이슈 등록
 
 - [x] `docker info`, `supabase --version`, `node -v`, `vercel --version`, `gh auth status` 모두 ✅
@@ -21,20 +36,20 @@
 
 ---
 
-## Phase 1 — Next.js 앱 부트스트랩
+## Phase 1 — Next.js 앱 부트스트랩 ✅
 
 **커밋 목표:** `feat: #1 Next.js + Chakra UI v3 + Supabase + Drizzle 부트스트랩`
 
-- [ ] `package.json` — next, react, typescript, @chakra-ui/react@^3, @supabase/supabase-js, drizzle-orm, postgres, drizzle-kit
-- [ ] `tsconfig.json`, `next.config.ts`
-- [ ] `app/layout.tsx` — ChakraProvider 포함
-- [ ] `app/providers.tsx` — Chakra UI v3 ColorModeProvider
-- [ ] `app/page.tsx` — 홈 페이지 골격
-- [ ] `lib/supabase/client.ts`, `lib/supabase/server.ts`
-- [ ] `lib/db/schema.ts` — tasks 테이블 (CLAUDE.md §3 정의)
-- [ ] `lib/db/index.ts` — Drizzle 클라이언트
-- [ ] `drizzle.config.ts` — CLAUDE.md §6 규약
-- [ ] `package.json` 스크립트: `db:generate`, `db:migrate`, `db:studio`
+- [x] `package.json` — next, react, typescript, @chakra-ui/react@^3, @supabase/supabase-js, drizzle-orm, postgres, drizzle-kit
+- [x] `tsconfig.json`, `next.config.ts`
+- [x] `app/layout.tsx` — ChakraProvider 포함
+- [x] `app/providers.tsx` — Chakra UI v3 ColorModeProvider
+- [x] `app/page.tsx` — 홈 페이지 골격
+- [x] `lib/supabase/client.ts`, `lib/supabase/server.ts`
+- [x] `lib/db/schema.ts` — tasks 테이블 (CLAUDE.md §3 정의)
+- [x] `lib/db/index.ts` — Drizzle 클라이언트
+- [x] `drizzle.config.ts` — CLAUDE.md §6 규약
+- [x] `package.json` 스크립트: `db:generate`, `db:migrate`, `db:studio`
 
 ---
 
