@@ -94,7 +94,7 @@ export default function TaskRow({ task, depth = 0, hasChildren, isCollapsed, isF
               transition="width 0.2s"
             />
           </Box>
-          <Text fontSize="11px" color="#898989" w="28px" textAlign="right">
+          <Text fontSize="11px" color="#898989" w="32px" textAlign="right" whiteSpace="nowrap">
             {task.progress}%
           </Text>
         </Flex>
